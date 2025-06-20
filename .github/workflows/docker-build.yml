@@ -32,7 +32,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build And Push Images
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v5
         with:
           push: true
           tags: ghcr.io/hirrao/go-server:latest

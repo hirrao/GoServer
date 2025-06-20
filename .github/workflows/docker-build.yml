@@ -42,9 +42,9 @@ jobs:
           tags: ghcr.io/hirrao/go-server:latest
 
       - name: Delete all containers from repository without tags
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v5
         with:
-          token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           repository_owner: ${{ github.repository_owner }}
           repository: ${{ github.repository }}
           untagged_only: true

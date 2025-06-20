@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoServer/route"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/hirrao/go-server/route"
 )
 
 func main() {

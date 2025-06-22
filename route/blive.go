@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/valyala/fasthttp"
+	"github.com/hirrao/go-server/common/http"
 	"strconv"
 )
 
@@ -27,31 +27,31 @@ func RouteBLive(app *fiber.App) {
 	group := app.Group("/blive")
 	group.Get("/:roomId", func(ctx *fiber.Ctx) error {
 		res, err := getUrl(ctx.Params("roomId"))
-		if err != nil {
-			return ctx.SendString(err.Error())
-		}
-		return ctx.JSON(res)
+		return http.SendResponse(res, err, ctx)
 	})
 }
 
-func getUrl(rooId string) ([]url, error) {
-	code, resp, err := fasthttp.Get(nil,
-		fmt.Sprintf("https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo?room_id=%s&play_url=1&mask=1&qn=20000&platform=web", rooId),
+func getUrl(roomId string) ([]url, error) {
+	resp, err := http.Get(
+		fmt.Sprintf("https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo?room_id=%s&play_url=1&mask=1&qn=20000&platform=web", roomId),
 	)
 	if err != nil {
 		return nil, err
 	}
-	if code != 200 {
-		return nil, errors.New(strconv.Itoa(code))
+	if resp.StatusCode() != 200 {
+		return nil, errors.New(strconv.Itoa(resp.StatusCode()))
 
 	}
 	var b body
-	err = json.Unmarshal(resp, &b)
+	err = json.Unmarshal(resp.Body(), &b)
 	if err != nil {
 		return nil, err
 	}
 	if b.Code != 0 {
 		return nil, errors.New(b.Message)
+	}
+	if b.Data.PlayUrl.Durl == nil {
+		return nil, errors.New("无法获取, 可能未开播")
 	}
 	return b.Data.PlayUrl.Durl, nil
 }

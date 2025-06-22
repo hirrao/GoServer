@@ -26,12 +26,12 @@ type url struct {
 func RouteBLive(app *fiber.App) {
 	group := app.Group("/blive")
 	group.Get("/:roomId", func(ctx *fiber.Ctx) error {
-		res, err := getUrl(ctx.Params("roomId"))
+		res, err := getBliveUrl(ctx.Params("roomId"))
 		return http.SendResponse(res, err, ctx)
 	})
 }
 
-func getUrl(roomId string) ([]url, error) {
+func getBliveUrl(roomId string) ([]url, error) {
 	resp, err := http.Get(
 		fmt.Sprintf("https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo?room_id=%s&play_url=1&mask=1&qn=20000&platform=web", roomId),
 	)

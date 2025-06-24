@@ -28,7 +28,7 @@ func routeBvideo(app *fiber.App) {
 	}
 	group := app.Group("/bvideo")
 	group.Get("/:bvid", func(ctx *fiber.Ctx) error {
-		resp, err := getBiliVideo(ctx.Params("bvid"))
+		_, err := getBiliVideo(ctx.Params("bvid"))
 		if err != nil {
 			return ctx.Status(500).SendString(err.Error())
 		}
@@ -42,7 +42,7 @@ func getBiliVideo(bvid string) (interface{}, error) {
 		return res, err
 	}
 	avid := res.(string)
-	dash, err := getDash(avid, bvid)
+	_, err = getDash(avid, bvid)
 	return nil, errors.New("TODO")
 }
 
@@ -57,7 +57,7 @@ func getDash(bvid string, cvid string) (interface{}, error) {
 		return nil, errors.New(strconv.Itoa(code))
 	}
 	var result Response
-	var data map[string]interface{}
+	var _ map[string]interface{}
 	_ = json.Unmarshal(resp, &result)
 	if result.data == nil {
 		return nil, errors.New(result.message)

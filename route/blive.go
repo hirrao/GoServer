@@ -27,7 +27,7 @@ func RouteBLive(app *fiber.App) {
 	group := app.Group("/blive")
 	group.Get("/:roomId", func(ctx *fiber.Ctx) error {
 		res, err := getBliveUrl(ctx.Params("roomId"))
-		if ctx.QueryInt("r", 0) == 1 && err != nil {
+		if ctx.QueryInt("r", 0) == 1 && err == nil {
 			uri := res[0].Url
 			return ctx.Redirect(uri, fiber.StatusFound)
 		}
